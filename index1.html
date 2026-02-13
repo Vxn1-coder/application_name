@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Banking App</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <style>
+    body {font-family: Arial, sans-serif; background:#f0f8ff; padding:24px;}
+    .card {max-width:360px;margin:40px auto;background:#fff;padding:16px;border-radius:10px;text-align:center;
+          box-shadow:0 6px 18px rgba(0,0,0,0.06);}
+    input, button {width:100%;padding:10px;margin-top:8px;border-radius:6px;box-sizing:border-box;font-size:16px;}
+    .row {display:flex;gap:8px;margin-top:8px}
+    .row button {flex:1}
+    .small {font-size:0.9rem;color:#555;margin-top:8px}
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h2>Bank Account</h2>
+    <div>Balance: ₹<span id="balance">1000</span></div>
+
+    <input id="amount" type="number" min="1" placeholder="Enter amount (₹)" />
+
+    <div class="row">
+      <button id="deposit">Deposit</button>
+      <button id="withdraw">Withdraw</button>
+    </div>
+
+    <button id="reset" style="margin-top:10px;background:#888;color:white;">Reset Saved Balance</button>
+
+  </div>
+
+  <script>
+    let balance = 4000;
+    const balanceEl = document.getElementById('balance');
+    const amountEl = document.getElementById('amount');
+
+    // Save current
+    function save() {
+      try { localStorage.setItem('balance', String(balance)); } catch (e) { /* ignore */ }
+    }
+    // Read saved balance update UI
+    function display() {
+      try {
+        const s = localStorage.getItem('balance');
+        if (s !== null && !isNaN(Number(s))) balance = Number(s);
+      } catch (e) { /* ignore */ }
+      balanceEl.textContent = balance;
+    }
+    function deposit() {
+      const v = Number(amountEl.value);
+      if (!v || v <= 0) { alert('Enter an amount greater than 0'); return; }
+      balance += v;
+      balanceEl.textContent = balance;
+      save();
+      amountEl.value = '';
+      amountEl.focus();
+    }
+    // Withdraw
+    function withdraw() {
+      const v = Number(amountEl.value);
+      if (!v || v <= 0) { alert('Enter an amount greater than 0'); return; }
+      if (v > balance) { alert('Insufficient balance'); return; }
+      balance -= v;
+      balanceEl.textContent = balance;
+      save();
+      amountEl.value = '';
+      amountEl.focus();
+    }
+
+    // Reset saved balance 
+    function resetSaved() {
+      localStorage.removeItem('balance');
+      balance = 1000;
+      display();
+    }
+
+    // Event wiring
+    document.getElementById('deposit').addEventListener('click', deposit);
+    document.getElementById('withdraw').addEventListener('click', withdraw);
+    document.getElementById('reset').addEventListener('click', resetSaved);
+    amountEl.addEventListener('keydown', e => { if (e.key === 'Enter') deposit(); });
+
+    // Show saved balance when the page loads
+    window.addEventListener('load', display);
+  </script>
+</body>
+</html>

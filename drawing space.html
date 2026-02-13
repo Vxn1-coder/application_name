@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Drawing Canvas</title>
+<style>
+* {margin:0;padding:0;box-sizing:border-box;font-family:system-ui,sans-serif}
+body {background:#f0f2f5;height:100vh;display:flex;flex-direction:column;align-items:center;padding:20px;gap:20px}
+.controls {display:flex;gap:15px;flex-wrap:wrap;justify-content:center}
+input[type="color"] {width:50px;height:50px;border:none;border-radius:10px;cursor:pointer}
+input[type="range"] {width:120px}
+button {padding:12px 20px;border:none;border-radius:10px;background:#667eea;color:white;cursor:pointer;font-weight:500;transition:0.3s}
+button:hover {background:#5a67d8;transform:translateY(-2px)}
+#canvas {border:3px solid #e2e8f0;border-radius:15px;background:white;box-shadow:0 10px 30px rgba(0,0,0,0.2);cursor:crosshair;max-width:100%;touch-action:none}
+@media(max-width:768px){.controls{flex-direction:column;align-items:center}}
+</style>
+</head>
+<body>
+<div class="controls">
+<input type="color" id="color" value="#000000">
+<input type="range" id="brushSize" min="1" max="50" value="5">
+<button onclick="clearCanvas()">🗑️ Clear</button>
+<button onclick="saveImage()">💾 Save</button>
+</div>
+<canvas id="canvas" width="900" height="600"></canvas>
+<script>
+const canvas=document.getElementById('canvas');
+const ctx=canvas.getContext('2d');
+const colorEl=document.getElementById('color');
+const brushSizeEl=document.getElementById('brushSize');
+let isDrawing=false;
+
+ctx.lineJoin='round';ctx.lineCap='round';ctx.lineWidth=5;ctx.strokeStyle='#000000';
+
+function draw(e){
+if(!isDrawing)return;
+ctx.globalCompositeOperation='source-over';
+ctx.lineWidth=brushSizeEl.value;
+ctx.strokeStyle=colorEl.value;
+ctx.lineTo(e.clientX-canvas.offsetLeft,e.clientY-canvas.offsetTop);
+ctx.stroke();
+ctx.beginPath();
+ctx.moveTo(e.clientX-canvas.offsetLeft,e.clientY-canvas.offsetTop);
+}
+
+canvas.addEventListener('mousedown',e=>{isDrawing=true;draw(e);});
+canvas.addEventListener('mousemove',draw);
+canvas.addEventListener('mouseup',()=>isDrawing=false);
+canvas.addEventListener('mouseout',()=>isDrawing=false);
+
+function clearCanvas(){
+ctx.clearRect(0,0,canvas.width,canvas.height);
+}
+
+function saveImage(){
+const link=document.createElement('a');
+link.download='my-drawing.png';
+link.href=canvas.toDataURL();
+link.click();
+}
+
+// Touch support for mobile
+canvas.addEventListener('touchstart',e=>{e.preventDefault();isDrawing=true;draw(e.touches[0]);});
+canvas.addEventListener('touchmove',e=>{e.preventDefault();draw(e.touches[0]);});
+canvas.addEventListener('touchend',e=>{e.preventDefault();isDrawing=false;});
+</script>
+</body>
+</html>

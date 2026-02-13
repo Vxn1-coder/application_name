@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Registration Form</title>
+    <!-- <link rel="stylesheet" href="style.css"> -->
+    <style>
+        body {
+            font-family: Arial;
+            background: #510f86;
+        }
+
+        form {
+            width: 360px;
+            margin: 50px auto;
+            padding: 20px;
+            background: rgb(197, 31, 31);
+            border-radius: 5px;
+        }
+        .ellipse {
+      background: #b8ad6d;
+      width: 320px;
+      height: 200px;
+      border: 6px solid #007bff;
+      border-radius: 50% / 40%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 24px auto;
+      box-sizing: border-box;
+      background: #eaf3ff;
+      color: #003a66;
+      font-family: system-ui, Arial, sans-serif;
+    }
+
+        input {
+            width: 100%;
+            padding: 8px;
+            margin: 10px 0;
+            box-sizing: border-box;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background: green;
+            color: white;
+            border: rgb(2, 82, 68);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="ellipse">Registration Form</div>
+    <form>
+        <h2>Student Registration</h2>
+
+        <input type="text" placeholder="Enter Name" required pattern="[A-Za-z ]+">
+        <input type="email" placeholder="Enter Email" required>
+        <input type="number" placeholder="Enter Age" required min="18">
+
+        <button type="submit">Register</button>
+    </form>
+</body>
+
+</html>
